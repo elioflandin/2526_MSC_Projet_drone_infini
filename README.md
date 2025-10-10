@@ -2,7 +2,7 @@
 
 **Étudiants participants au projet:**
 
- Tristan NOTERMAN - tristan.noterman@ensea.fr
+- Tristan NOTERMAN - tristan.noterman@ensea.fr
 - Kevin DUGARD - kevin.dugard@ensea.fr
 - Elio FLANDIN - elio.flandin@ensea.fr
 
