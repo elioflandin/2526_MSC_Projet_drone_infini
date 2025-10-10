@@ -1,14 +1,13 @@
 # Projet drone infini – Aile volante autonome à énergie solaire
 
-**Étudiants :**
+**Étudiants participants au projet:**
 
+ Tristan NOTERMAN - tristan.noterman@ensea.fr
 - Kevin DUGARD - kevin.dugard@ensea.fr
-- Tristan NOTERMAN - tristan.noterman@ensea.fr
 - Elio FLANDIN - elio.flandin@ensea.fr
 
-## Project background:
 
-## 🌍 Introduction et genèse du projet
+## Introduction et genèse du projet
 
 L’idée du **Drone Infini** est née d’une réflexion simple :  
 > *Et si un drone n’avait plus jamais besoin de se poser ?*
@@ -56,5 +55,5 @@ Le **Drone Infini** vise à démontrer qu’il est possible d’unir **autonomie
 
 ---
 
-## 📁 Organisation du dépôt
+## Organisation du dépôt
 
