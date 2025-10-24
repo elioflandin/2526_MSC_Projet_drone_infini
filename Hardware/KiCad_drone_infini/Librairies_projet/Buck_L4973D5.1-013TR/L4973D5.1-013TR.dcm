@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP L4973D5.1-013TR
+D 3.5 A step down switching regulator
+K
+F https://www.st.com/resource/en/datasheet/l4973.pdf
+$ENDCMP
+#
+#End Doc Library

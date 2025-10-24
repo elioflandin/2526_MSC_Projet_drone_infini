@@ -1,0 +1,6 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "TESEO-LIV3R")(type "KiCad")(uri "${KIPRJMOD}/Librairies_projet/GPS_Teseo/TESEO-LIV3R.kicad_sym")(options "")(descr ""))
+  (lib (name "LD1117D33TR")(type "KiCad")(uri "${KIPRJMOD}/Librairies_projet/LDO_LD1117D33TR/LD1117D33TR.kicad_sym")(options "")(descr ""))
+  (lib (name "L4973D5_1-013TR")(type "KiCad")(uri "${KIPRJMOD}/Librairies_projet/Buck_L4973D5.1-013TR/L4973D5_1-013TR.kicad_sym")(options "")(descr ""))
+)

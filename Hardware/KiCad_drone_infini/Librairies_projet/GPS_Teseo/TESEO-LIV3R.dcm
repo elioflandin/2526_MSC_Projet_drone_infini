@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TESEO-LIV3R
+D - RF Receiver BeiDou, GLONASS, GNSS, GPS 1.561GHz, 1.575MHz -163dBm Not Included 18-LCC (9.7x10.1)
+K
+F https://www.st.com/resource/en/datasheet/teseo-liv3r.pdf
+$ENDCMP
+#
+#End Doc Library
