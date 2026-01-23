@@ -1,59 +1,89 @@
-# Projet drone infini – Aile volante autonome à énergie solaire
+Voici une proposition de README.md exhaustive et détaillée pour votre dépôt GitHub, élaborée à partir des éléments techniques et organisationnels de votre rapport de projet.
 
-**Étudiants participants au projet:**
+🛰️ Drone Infinity - Dassault UAV Challenge
+Ce projet a été réalisé par une équipe d'étudiants en 3ème année de spécialité Mécatronique et Systèmes Complexes (MSC) à l'ENSEA. L'objectif initial s'inscrit dans le cadre du Dassault UAV Challenge, une compétition d'ingénierie aéronautique exigeante.
 
-- Tristan NOTERMAN - tristan.noterman@ensea.fr
-- Kevin DUGARD - kevin.dugard@ensea.fr
-- Elio FLANDIN - elio.flandin@ensea.fr
+Le concept Infinity propose la conception d'un drone de type "planeur solaire" capable d'une autonomie théoriquement illimitée en alternant des phases de vol plané et de propulsion motorisée selon un cycle jour/nuit.
 
-
-## Introduction et genèse du projet
-
-L’idée du **Drone Infini** est née d’une réflexion simple :  
-> *Et si un drone n’avait plus jamais besoin de se poser ?*
-
-Ce projet académique s’inscrit dans une réflexion sur **l’autonomie énergétique** et la **durabilité dans l’aéronautique légère**.  
-Notre ambition est de concevoir un drone capable de voler le plus longtemps possible en exploitant uniquement des sources d’énergie renouvelables.
-
-À notre échelle, nous avons choisi de réaliser un **prototype réduit** basé sur le **Parrot Disco FPV**, une aile volante légère, stable et efficace. 
-L’objectif est d’en concevoir une version **repensée et autonome en énergie**, conçue **de A à Z**, depuis la structure jusqu’à l’électronique embarquée.
-
-En théorie, ce drone pourrait **voler indéfiniment** en exploitant l’**énergie solaire** comme principale source d’alimentation, via des **panneaux photovoltaïques intégrés sur l’aile**.  
-Dans la pratique, notre modèle étant de petite taille et volant à basse altitude (donc souvent sous les nuages), il ne sera pas totalement autonome.  
-Nous visons cependant à **augmenter considérablement son autonomie de vol** et à **réaliser les calculs démontrant la faisabilité d’un vol quasi-infini**.
-
-Ce projet est autant une aventure technique qu’une exploration de ce que peut devenir l’aéronautique durable à petite échelle.
+📋 Présentation du Concept "Infinity"
+Inspiré du drone-satellite Zephyr d'Airbus, le projet repose sur une stratégie énergétique spécifique:
 
 
-## Objectifs du projet
-
-Notre ambition est de concevoir un drone **quasiment autonome en énergie**, en repensant chaque couche du système :
-
-### Aérodynamique et structure
-- Reprendre la géométrie du *Parrot Disco FPV* comme base.  
-- Adapter la structure pour intégrer les cellules solaires sans compromettre la portance.  
-- Réaliser une aile légère, robuste et optimisée pour l’endurance en polystyrène.
-
-### Énergie solaire
-- Couvrir la surface supérieure de l’aile de **panneaux solaires souples**.  
-- Mettre en place une **gestion intelligente de l’énergie** (charge, stockage, distribution).  
-- Explorer des stratégies de vol à consommation minimale.
-
-### Électronique embarquée
-- Concevoir **notre propre PCB** pour gérer la propulsion, les servomoteurs et les capteurs.  
-- Intégrer la **communication avec la radiocommande**.  
-
-### Contrôle et autonomie
-- Implémenter un contrôle de vol basé sur microcontrôleur **STM32**.  
+Stratégie diurne : Le drone utilise la portance pour planer tout en minimisant la consommation énergétique (uniquement pour le contrôle directionnel). Simultanément, des panneaux solaires rechargent les batteries.
 
 
+Stratégie nocturne : Le drone active son moteur principal pour regagner de l'altitude et se maintenir grâce à l'énergie stockée durant la journée.
 
-## Vision à long terme
+🛠️ Architecture Matérielle (Hardware)
+Le système repose sur un microcontrôleur haute performance STM32H743VIT6.
 
-Le **Drone Infini** vise à démontrer qu’il est possible d’unir **autonomie énergétique**, **légèreté** et **simplicité de conception**.  
-À terme, ce projet pourrait servir de base à des plateformes d’observation, de cartographie ou de communication **auto-alimentées et à longue durée de vol**.
+1. PCB & Énergie
+Bien que des modules séparés aient été utilisés pour le prototype final en raison de contraintes de délais, une carte électronique dédiée a été conçue sous KiCad.
 
----
 
-## Organisation du dépôt
+Alimentation : Abaisseur de tension (Buck) L4973D5.1 pour passer de la batterie 11.1V (LiPo) vers 5.1V, puis régulateur LDO LD1117D33TR pour le 3.3V des capteurs.
 
+
+Mesure de puissance : Capteur INA226 pour surveiller en temps réel la tension et le courant délivrés par les panneaux solaires.
+
+2. Capteurs & Instrumentation
+
+Centrale Inertielle (IMU) : Module GY-91 (intégrant un MPU9250) communiquant en I2C pour mesurer l'accélération et la vitesse angulaire sur 3 axes.
+
+
+Positionnement : GPS GY-NEO 6M (UART) pour le mapping et le retour au point de départ (RTL).
+
+
+Interface Locale : Écran OLED géré par un driver SH1106 pour l'affichage de l'état du système (vitesse, mode "Armed/Locked", état Bluetooth).
+
+💻 Logiciel & Contrôle (Software)
+1. Interface de Commande PC (Python)
+Le pilotage s'effectue via un script Python utilisant la bibliothèque pygame pour lire les entrées d'une manette (type Xbox 360).
+
+
+Communication : Envoi d'une trame binaire structurée (11 octets) via UART à 115200 bauds.
+
+
+Sécurité des données : Implémentation d'un Checksum (somme de contrôle) côté Python et STM32 pour valider l'intégrité de chaque commande reçue.
+
+2. Algorithmes de Stabilisation
+Le firmware STM32 intègre une boucle d'asservissement complète:
+
+
+Estimation d'attitude : Calcul des angles de roulis (roll) et de tangage (pitch) à partir des données IMU et d'un filtre complémentaire.
+
+
+Correcteur PID : Régulation en position angulaire pour stabiliser le drone face aux perturbations.
+
+
+Mixage de gouvernes : Les commandes de roulis et tangage sont combinées pour piloter les deux servomoteurs des ailes.
+
+3. Sécurité (Failsafe)
+Un mode de sécurité critique a été conçu pour déclencher un atterrissage d'urgence ou la mise en sécurité des moteurs en cas de perte de signal radio ou de batterie faible.
+
+📂 Structure du Projet
+Plaintext
+├── Firmware/             # Code source C (STM32CubeIDE)
+│   ├── Drivers/          # Drivers capteurs (IMU, GPS, OLED)
+│   ├── Src/              # Gestion PID, PWM et interruptions UART
+├── PC_Client/            # Script Python (Pygame & Serial)
+├── Hardware/             # Schémas et fichiers KiCad du PCB
+└── Docs/                 # Rapport complet et fiches techniques
+🚀 État de l'avancement & Perspectives
+Le projet constitue une base robuste pour les promotions futures.
+
+
+Validé : Communication manette-PC-STM32, acquisition IMU calibrée, génération PWM pour servos, affichage OLED.
+
+
+À poursuivre : Finalisation du routage et fabrication du PCB dédié, optimisation de l'antenne GPS, intégration complète du moteur brushless avec asservissement de vitesse.
+
+👥 Équipe (Groupe MSC)
+
+Elio FLANDIN : Mesures, conception PCB & Asservissement.
+
+
+Tristan NOTERMAN : Motorisation, puissance & énergie.
+
+
+Kevin DUGARD : Gestion de projet & Développement Software (PC/STM32).
