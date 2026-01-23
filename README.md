@@ -1,87 +1,287 @@
-🛰️ Drone Infinity - Dassault UAV Challenge
-Ce projet a été réalisé par une équipe d'étudiants en 3ème année de spécialité Mécatronique et Systèmes Complexes (MSC) à l'ENSEA. L'objectif initial s'inscrit dans le cadre du Dassault UAV Challenge, une compétition d'ingénierie aéronautique exigeante.
+# Drone Infinity ✈️☀️
 
-Le concept Infinity propose la conception d'un drone de type "planeur solaire" capable d'une autonomie théoriquement illimitée en alternant des phases de vol plané et de propulsion motorisée selon un cycle jour/nuit.
+## Présentation générale
 
-📋 Présentation du Concept "Infinity"
-Inspiré du drone-satellite Zephyr d'Airbus, le projet repose sur une stratégie énergétique spécifique:
+Ce dépôt GitHub contient le travail réalisé dans le cadre d’un **projet de 3ᵉ année MSc**, initialement inspiré par le **Dassault UAV Challenge**. Le projet, nommé **Drone Infinity**, vise à poser les bases techniques et logicielles d’un drone de type *aile volante* capable de fonctionner sur des durées très longues, en s’inspirant du concept du drone-satellite **Zephyr** développé par Airbus.
 
+⚠️ **Important** : ce projet n’a pas pour objectif de livrer un drone finalisé et opérationnel. Il s’agit volontairement d’un **projet amorce**, pensé pour être repris, amélioré et complété par de futurs étudiants.
 
-Stratégie diurne : Le drone utilise la portance pour planer tout en minimisant la consommation énergétique (uniquement pour le contrôle directionnel). Simultanément, des panneaux solaires rechargent les batteries.
+---
 
+## Contexte : Dassault UAV Challenge
 
-Stratégie nocturne : Le drone active son moteur principal pour regagner de l'altitude et se maintenir grâce à l'énergie stockée durant la journée.
+Le Dassault UAV Challenge est une compétition d’ingénierie organisée par Dassault Aviation, destinée à confronter les étudiants à une problématique industrielle réelle : la conception et le pilotage (partiellement ou totalement) autonome d’un drone dans un environnement contraint.
 
-🛠️ Architecture Matérielle (Hardware)
-Le système repose sur un microcontrôleur haute performance STM32H743VIT6.
+Ce challenge met l’accent sur :
 
-1. PCB & Énergie
-Bien que des modules séparés aient été utilisés pour le prototype final en raison de contraintes de délais, une carte électronique dédiée a été conçue sous KiCad.
+* le travail en équipe,
+* la robustesse des choix techniques,
+* l’autonomie et la stabilisation,
+* la gestion de l’énergie,
+* l’intégration capteurs / actionneurs / contrôle.
 
+Bien que le projet ait été initialement pensé pour s’inscrire dans ce cadre, des contraintes de temps, de taille et de faisabilité ont conduit à s’en détacher partiellement, tout en conservant la philosophie globale.
 
-Alimentation : Abaisseur de tension (Buck) L4973D5.1 pour passer de la batterie 11.1V (LiPo) vers 5.1V, puis régulateur LDO LD1117D33TR pour le 3.3V des capteurs.
+---
 
+## Objectif du projet Drone Infinity
 
-Mesure de puissance : Capteur INA226 pour surveiller en temps réel la tension et le courant délivrés par les panneaux solaires.
+L’ambition du projet est de concevoir un **drone “infini”**, c’est-à-dire capable d’alterner entre deux modes de fonctionnement :
 
-2. Capteurs & Instrumentation
+* **Le jour** : vol plané, où l’énergie stockée est principalement utilisée pour la commande et la stabilisation, tandis que les panneaux solaires rechargent la batterie.
+* **La nuit** : vol motorisé, permettant au drone de regagner de l’altitude afin de préparer la phase de plané suivante.
 
-Centrale Inertielle (IMU) : Module GY-91 (intégrant un MPU9250) communiquant en I2C pour mesurer l'accélération et la vitesse angulaire sur 3 axes.
+Le drone adopte donc une architecture de **planeur / aile volante**, très différente des drones multirotors classiques.
 
+À l’échelle du projet étudiant, il a été décidé de :
 
-Positionnement : GPS GY-NEO 6M (UART) pour le mapping et le retour au point de départ (RTL).
+* ne pas réaliser un drone volant complet,
+* développer des **briques technologiques indépendantes** (commande, capteurs, asservissements, communication),
+* documenter précisément le travail afin de faciliter une reprise ultérieure.
 
+---
 
-Interface Locale : Écran OLED géré par un driver SH1106 pour l'affichage de l'état du système (vitesse, mode "Armed/Locked", état Bluetooth).
+## Équipe projet
 
-💻 Logiciel & Contrôle (Software)
-1. Interface de Commande PC (Python)
-Le pilotage s'effectue via un script Python utilisant la bibliothèque pygame pour lire les entrées d'une manette (type Xbox 360).
+Le projet a été réalisé par une équipe de **trois étudiants en électronique et informatique**, spécialisés en mécatronique et systèmes complexes :
 
+* **Elio Flandin** :
 
-Communication : Envoi d'une trame binaire structurée (11 octets) via UART à 115200 bauds.
+  * conception électronique (PCB),
+  * capteurs,
+  * asservissements,
+  * partie contrôle bas niveau.
 
+* **Tristan Noterman** :
 
-Sécurité des données : Implémentation d'un Checksum (somme de contrôle) côté Python et STM32 pour valider l'intégrité de chaque commande reçue.
+  * motorisation,
+  * électronique de puissance,
+  * ESC et moteur brushless,
+  * commande moteur.
 
-2. Algorithmes de Stabilisation
-Le firmware STM32 intègre une boucle d'asservissement complète:
+* **Kevin Dugard** :
 
+  * coordination et gestion du projet,
+  * support logiciel,
+  * intégration et validation des fonctionnalités.
 
-Estimation d'attitude : Calcul des angles de roulis (roll) et de tangage (pitch) à partir des données IMU et d'un filtre complémentaire.
+---
 
+## Cahier des charges (extrait)
 
-Correcteur PID : Régulation en position angulaire pour stabiliser le drone face aux perturbations.
+Le cahier des charges initial comprend notamment :
 
+* Commande manuelle via manette
+* Acquisition de données (IMU, GPS, pression, énergie)
+* Stabilisation en roulis / tangage
+* Pilotage de servomoteurs
+* Pilotage d’un moteur brushless
+* Gestion de l’énergie
+* Interface utilisateur (UART / écran)
+* Sécurité et mode failsafe
 
-Mixage de gouvernes : Les commandes de roulis et tangage sont combinées pour piloter les deux servomoteurs des ailes.
+À la fin du projet, plusieurs exigences sont :
 
-3. Sécurité (Failsafe)
-Un mode de sécurité critique a été conçu pour déclencher un atterrissage d'urgence ou la mise en sécurité des moteurs en cas de perte de signal radio ou de batterie faible.
+* **validées**,
+* **partiellement validées**,
+* ou **non validées**, principalement par manque de temps ou de matériel.
 
-📂 Structure du Projet
-Plaintext
-├── Firmware/             # Code source C (STM32CubeIDE)
-│   ├── Drivers/          # Drivers capteurs (IMU, GPS, OLED)
-│   ├── Src/              # Gestion PID, PWM et interruptions UART
-├── PC_Client/            # Script Python (Pygame & Serial)
-├── Hardware/             # Schémas et fichiers KiCad du PCB
-└── Docs/                 # Rapport complet et fiches techniques
-🚀 État de l'avancement & Perspectives
-Le projet constitue une base robuste pour les promotions futures.
+---
 
+## Architecture matérielle
 
-Validé : Communication manette-PC-STM32, acquisition IMU calibrée, génération PWM pour servos, affichage OLED.
+### PCB (carte électronique)
 
+Une carte électronique dédiée a été **conçue mais non fabriquée**. Elle avait pour objectif d’intégrer :
 
-À poursuivre : Finalisation du routage et fabrication du PCB dédié, optimisation de l'antenne GPS, intégration complète du moteur brushless avec asservissement de vitesse.
+* Un **STM32H743** comme microcontrôleur principal
+* Des étages d’alimentation :
 
-👥 Équipe (Groupe MSC)
+  * batterie 11,1 V → 5,1 V (buck)
+  * 5,1 V → 3,3 V (LDO)
+* Les capteurs suivants :
 
-Elio FLANDIN : Mesures, conception PCB & Asservissement.
+  * IMU (LSM6DSR / MPU9250)
+  * GPS (TESEO / NEO-6M)
+  * baromètre (MPL3115A2)
+  * capteur courant/tension (INA226)
+* Les interfaces :
 
+  * servomoteurs
+  * ESC moteur brushless
+  * caméra
 
-Tristan NOTERMAN : Motorisation, puissance & énergie.
+Le PCB n’a pas abouti principalement à cause :
 
+* des délais de fabrication,
+* du risque d’erreur sans itération possible,
+* du planning académique.
 
-Kevin DUGARD : Gestion de projet & Développement Software (PC/STM32).
+➡️ Le projet repose donc sur des **modules du commerce** pour les tests et le développement logiciel.
+
+---
+
+## Acquisition des données
+
+### Centrale inertielle (IMU)
+
+L’IMU fournit :
+
+* accélérations sur 3 axes,
+* vitesses angulaires sur 3 axes.
+
+Fonctionnalités implémentées :
+
+* lecture I²C des registres,
+* conversion en unités physiques,
+* calibration statique (offsets),
+* estimation des angles de roulis et de tangage,
+* préparation pour la fusion de capteurs.
+
+### GPS
+
+Un module **NEO-6M** a été utilisé.
+
+Fonctionnalités logicielles :
+
+* réception UART par interruption,
+* parsing des trames NMEA (GPGGA, GPRMC),
+* stockage structuré des données (latitude, longitude, altitude, vitesse, satellites).
+
+⚠️ Limitation matérielle : l’antenne utilisée étant de faible qualité, aucun fix GPS exploitable n’a été obtenu.
+
+### Extensions envisagées
+
+* roue codeuse pour la vitesse moteur,
+* capteur de courant moteur,
+* tube de Pitot,
+* caméra pour vision et mapping.
+
+---
+
+## Communication des données
+
+Deux modes ont été explorés :
+
+* **UART vers PC** (PuTTY) : affichage temps réel des données capteurs.
+* **Affichage embarqué** : écran OLED SH1106 (code entièrement fonctionnel).
+
+---
+
+## Commande et pilotage
+
+### Chaîne de commande
+
+1. Manette (type Xbox 360)
+2. Script Python (pygame + pyserial)
+3. Transmission UART (trame binaire)
+4. STM32
+5. Génération PWM
+6. Servomoteurs / ESC
+
+### Trame binaire
+
+* Début de trame (0xAA)
+* Throttle, roll, pitch, yaw (int16)
+* Flags
+* Checksum
+
+La trame est vérifiée côté STM32 pour garantir l’intégrité des données.
+
+---
+
+## Servomoteurs et PWM
+
+* Fréquence PWM : 50 Hz
+* Largeur d’impulsion :
+
+  * 1000 µs → butée min
+  * 1500 µs → neutre
+  * 2000 µs → butée max
+
+Les servomoteurs commandent les gouvernes de l’aile volante.
+
+---
+
+## Moteur brushless et ESC
+
+Une tentative de pilotage d’un moteur brushless a été réalisée :
+
+* PWM similaire aux servos
+* Séquences d’armement
+
+Résultat :
+
+* ESC reconnu,
+* moteur non fonctionnel.
+
+Hypothèses :
+
+* séquence de calibration incorrecte,
+* alimentation inadaptée,
+* fréquence PWM incompatible.
+
+Le code est néanmoins prêt à être repris et finalisé.
+
+---
+
+## Asservissements
+
+### Asservissement d’attitude
+
+* Estimation des angles (roll / pitch)
+* Correcteur PID (PD implémenté)
+* Saturation des commandes
+* Conversion angle → PWM
+* Mixage des gouvernes (aile volante)
+
+La chaîne logicielle est complète mais n’a pas été testée en conditions réelles de vol.
+
+### Asservissement moteur (concept)
+
+Architecture envisagée :
+
+* boucle courant interne,
+* boucle vitesse externe,
+* PWM triphasée.
+
+---
+
+## Sécurité et failsafe
+
+Un module de démonstration a été développé sur breadboard incluant :
+
+* joystick,
+* moteur DC,
+* écran OLED,
+* LEDs,
+* buzzer,
+* Bluetooth.
+
+Fonctionnalités :
+
+* mode **LOCKED / ARMED**,
+* indication sonore et visuelle,
+* gestion de perte de signal,
+* base pour un retour à position GPS.
+
+---
+
+## Conclusion
+
+Le projet **Drone Infinity** pose des bases solides pour un drone à longue endurance :
+
+* architecture claire,
+* briques logicielles réutilisables,
+* documentation détaillée,
+* nombreuses pistes d’amélioration.
+
+Il est volontairement **incomplet**, afin de servir de support pédagogique et technique pour de futurs projets.
+
+🚀 **Reprendre ce projet, c’est gagner plusieurs mois de travail d’initialisation.**
+
+---
+
+## Licence
+
+Projet académique – librement réutilisable à des fins pédagogiques.
