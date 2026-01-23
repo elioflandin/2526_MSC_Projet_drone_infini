@@ -1,5 +1,3 @@
-Voici une proposition de README.md exhaustive et détaillée pour votre dépôt GitHub, élaborée à partir des éléments techniques et organisationnels de votre rapport de projet.
-
 🛰️ Drone Infinity - Dassault UAV Challenge
 Ce projet a été réalisé par une équipe d'étudiants en 3ème année de spécialité Mécatronique et Systèmes Complexes (MSC) à l'ENSEA. L'objectif initial s'inscrit dans le cadre du Dassault UAV Challenge, une compétition d'ingénierie aéronautique exigeante.
 
